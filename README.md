@@ -1,7 +1,7 @@
 PolyBanking - Client
 ===========
 
-PolyBanking is a django application that allows use of PostFinance's [E-payement](https://www.postfinance.ch/fr/biz/prod/eserv/epay.html?WT.ac=_techshortcut_bizprodeservepayfr) service when running multiple websites.
+[PolyBanking](https://github.com/PolyLAN/polybanking) is a django application that allows use of PostFinance's [E-payement](https://www.postfinance.ch/fr/biz/prod/eserv/epay.html?WT.ac=_techshortcut_bizprodeservepayfr) service when running multiple websites.
 
 PolyBanking allows different services, through different configurations to request payment. The system will ask and forward the user to Postfinance, and will report the result and status of a payment back to the website who created the request.
 
