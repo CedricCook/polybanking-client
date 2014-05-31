@@ -50,7 +50,7 @@ class PolyBanking {
     /**
      *  POST an array to a certain url
      *  @param: $url, the url to post to; $data, an associative array to be posted
-     *  @return: the server's response
+     *  @return: the server's response.
      */
     function post_curl($url, $data){
         $ch = curl_init();
@@ -58,9 +58,13 @@ class PolyBanking {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         
         $result = curl_exec($ch);
-        
+
         curl_close();
         return $result;
     }
@@ -69,20 +73,16 @@ class PolyBanking {
      * Send off a new transaction to the PolyBanking server,
      * then send off the user to their payment site when PolyBanking gives the OK.
      * @param: $amount = amount in CHF, centimes
-     * @return: the url to send the user to.
+     * @return: an array of the transaction status and the url to send the user to.
      *
      */
-    function new_transaction($amount){
-        //You must set a way to define your reference here, for example "agepoly/item-token-$x"
-        $reference = "";
-        $extra_data = '';
-        
+    function new_transaction($amount, $reference, $extra_data = ''){       
         $data['amount'] = $amount;
         $data['reference'] = $reference;
         $data['extra_data'] = $extra_data;
         $data['config_id'] = $this->configID;
         
-        $data['sign'] = $this->compute_sig($keyRequest, $data);
+        $data['sign'] = $this->compute_sig($this->keyRequest, $data);
         
         $url = $server . "paiements/start";
         
