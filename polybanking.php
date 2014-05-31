@@ -88,15 +88,7 @@ class PolyBanking {
         
         $result = $this->post_curl($url, $data);
         
-        $redirURL = $result['url'];
-        $status = $result['status'];
-        
-        if($status != "OK"){
-            //Amount or reference or config or key error
-            //TODO: handle errors more precisely
-            die($status);
-        }
-        return $redirURL;  
+        return $result;
     }
     
     /**
