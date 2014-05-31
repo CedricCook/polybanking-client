@@ -69,24 +69,24 @@ class PolyBanking {
      * Send off a new transaction to the PolyBanking server,
      * then send off the user to their payment site when PolyBanking gives the OK.
      * @param: $amount = amount in CHF, centimes
-     * @return: void
+     * @return: the url to send the user to.
      *
      */
     function new_transaction($amount){
-        //TODO: Create some reasoning for picking $i
-        $reference = "agepoly/watches-token-$i";
+        //You must set a way to define your reference here, for example "agepoly/item-token-$x"
+        $reference = "";
         $extra_data = '';
         
         $data['amount'] = $amount;
         $data['reference'] = $reference;
         $data['extra_data'] = $extra_data;
-        $data['config_id'] = $configID;
+        $data['config_id'] = $this->configID;
         
-        $data['sign'] = compute_sig($keyRequest, $data);
+        $data['sign'] = $this->compute_sig($keyRequest, $data);
         
         $url = $server . "paiements/start";
         
-        $result = post_curl($url, $data);
+        $result = $this->post_curl($url, $data);
         
         $redirURL = $result['url'];
         $status = $result['status'];
@@ -96,9 +96,7 @@ class PolyBanking {
             //TODO: handle errors more precisely
             die($status);
         }
-    
-        //Send the user to wherever they need to pay
-        header('location: $redirURL');    
+        return $redirURL;  
     }
     
     /**
@@ -116,11 +114,11 @@ class PolyBanking {
         
         $url = $server . "api/transactions/". $reference . "/";
         
-        $data['config_id'] = $configID;
-        $data['secret'] = $keyAPI;
+        $data['config_id'] = $this->configID;
+        $data['secret'] = $this->keyAPI;
         
         //$result now contains all details of the transaction.
-        return post_curl($url, $data);
+        return $this->post_curl($url, $data);
     }
     
     
@@ -134,11 +132,11 @@ class PolyBanking {
     function get_transactions($max_transaction = 100){
         $url = $server . "api/transactions/";
         
-        $data['config_id'] = $configID;
-        $data['secret'] = $keyAPI;
+        $data['config_id'] = $this->configID;
+        $data['secret'] = $this->keyAPI;
         $data['max_transaction'] = $max_transaction;
         
-        $result = curl_post($url, $data);
+        $result = $this->post_curl($url, $data);
         
         if($result['result'] != "ok"){
             die('Could not get a list of transactions for an unknown reason.');
@@ -159,10 +157,10 @@ class PolyBanking {
         
         $url = $server . "api/transactions/" . $reference . "/logs/";
         
-        $data['config_id'] = $configID;
-        $data['secret'] = $keyAPI;
+        $data['config_id'] = $this->configID;
+        $data['secret'] = $this->keyAPI;
         
-        $result = post_curl($url, $data);
+        $result = $this->post_curl($url, $data);
         
         if($result['result'] != "ok"){
             die('Could not get a list of transactions for an unknown reason.');
@@ -184,10 +182,10 @@ class PolyBanking {
             }
         }
         
-        if($_POST['sign'] != compute_sig($keyIPN, $data)){
+        if($_POST['sign'] != $this->compute_sig($this->keyIPN, $data)){
             return array(false, 'SIGN', null, null, null, null);
         }
-        if($data['config_id'] != $configID){
+        if($data['config_id'] != $this->configID){
             return array(false, 'CONFIG', null, null, null, null);
         }
         
