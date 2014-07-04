@@ -174,14 +174,9 @@ class PolyBanking {
    * @params: POST: config, reference, postfinance_status, postfinance_status_good, last_update
    * @return: (is_ok, message, reference, postfinance_status, postfinance_status_good, last_update). See details @ official API spec.
    */
-  public function check_ipn() {
-    foreach ($_POST as $key => $value) {
-      if ($key != "sign") {
-        $data[$key] = $value;
-      }
-    }
+  public function check_ipn($data) {
 
-    if ($_POST['sign'] != $this->compute_sig($this->keyIPN, $data)) {
+    if ($data['sign'] != $this->compute_sig($this->keyIPN, array_diff_key($data, array('sign' => FALSE)))) {
       return array(FALSE, 'SIGN', NULL, NULL, NULL, NULL);
     }
     if ($data['config_id'] != $this->configID) {
