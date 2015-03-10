@@ -105,7 +105,7 @@ class PolyBanking {
      */
     function get_transaction($reference){
         if($reference = null){
-            die("Reference can't be null");
+          throw new InvalidArgumentException('Reference can not be null');
         }
         
         $url = $this->server . "api/transactions/". $reference . "/";
@@ -135,7 +135,7 @@ class PolyBanking {
         $result = $this->post_curl($url, $data);
         
         if($result->result != "ok"){
-            die('Could not get a list of transactions for an unknown reason.');
+          throw new UnexpectedValueException('Could not get a list of transactions for an unknown reason.');
         }
         
         return $result->data;
@@ -148,7 +148,7 @@ class PolyBanking {
      */
     function transaction_show_logs($reference){
         if($reference = null){
-            die("Reference can't be null");
+          throw new InvalidArgumentException('Reference can not be null');
         }
         
         $url = $this->server . "api/transactions/" . $reference . "/logs/";
@@ -159,7 +159,7 @@ class PolyBanking {
         $result = $this->post_curl($url, $data);
         
         if($result->result != "ok"){
-            die('Could not get a list of transactions for an unknown reason.');
+          throw new UnexpectedValueException('Could not get a list of transactions for an unknown reason.');
         }
         
         return $result->data;
