@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Client for the PolyBanking API
+ * Class PolyBanking
  */
 class PolyBanking {    
     protected $server = null;
@@ -14,6 +14,10 @@ class PolyBanking {
      * Standard constructor
      */
     public function __construct($server, $configID, $keyRequest, $keyAPI, $keyIPN){
+        if (substr($server, -1) != '/') {
+          // Assure a trailing slash.
+          $server .= '/';
+        }
         $this->server = $server;
         $this->configID = $configID;
         $this->keyRequest = $keyRequest;
@@ -65,8 +69,8 @@ class PolyBanking {
         
         $result = curl_exec($ch);
 
-        curl_close();
-        return $result;
+        curl_close($ch);
+        return json_decode($result);
     }
     
     /**
@@ -84,7 +88,7 @@ class PolyBanking {
         
         $data['sign'] = $this->compute_sig($this->keyRequest, $data);
         
-        $url = $server . "paiements/start";
+        $url = $this->server . "paiements/start/";
         
         $result = $this->post_curl($url, $data);
         
@@ -104,7 +108,7 @@ class PolyBanking {
             die("Reference can't be null");
         }
         
-        $url = $server . "api/transactions/". $reference . "/";
+        $url = $this->server . "api/transactions/". $reference . "/";
         
         $data['config_id'] = $this->configID;
         $data['secret'] = $this->keyAPI;
@@ -122,7 +126,7 @@ class PolyBanking {
      * (yes it should be $max_transactions and not $max_transaction, but we're following official API standards...)
      */
     function get_transactions($max_transaction = 100){
-        $url = $server . "api/transactions/";
+        $url = $this->server . "api/transactions/";
         
         $data['config_id'] = $this->configID;
         $data['secret'] = $this->keyAPI;
@@ -130,11 +134,11 @@ class PolyBanking {
         
         $result = $this->post_curl($url, $data);
         
-        if($result['result'] != "ok"){
+        if($result->result != "ok"){
             die('Could not get a list of transactions for an unknown reason.');
         }
         
-        return $result['data'];
+        return $result->data;
     }
     
     /**
@@ -147,18 +151,18 @@ class PolyBanking {
             die("Reference can't be null");
         }
         
-        $url = $server . "api/transactions/" . $reference . "/logs/";
+        $url = $this->server . "api/transactions/" . $reference . "/logs/";
         
         $data['config_id'] = $this->configID;
         $data['secret'] = $this->keyAPI;
         
         $result = $this->post_curl($url, $data);
         
-        if($result['result'] != "ok"){
+        if($result->result != "ok"){
             die('Could not get a list of transactions for an unknown reason.');
         }
         
-        return $result['data'];
+        return $result->data;
     }
     
     /**
