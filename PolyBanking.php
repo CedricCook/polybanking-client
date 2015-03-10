@@ -108,7 +108,7 @@ class PolyBanking {
    *  last_ipn_date, postfinance_status_text, internal_status_text). See details @ official API spec.
    */
   public function get_transaction($reference) {
-    if ($reference = NULL) {
+    if ($reference == NULL) {
       throw new InvalidArgumentException('Reference can not be null');
     }
 
@@ -150,7 +150,7 @@ class PolyBanking {
    * @return (when, extra_data, log_type, log_type_text). See details @ official API spec.
    */
   public function transaction_show_logs($reference) {
-    if ($reference = NULL) {
+    if ($reference == NULL) {
       throw new InvalidArgumentException('Reference can not be null');
     }
 
