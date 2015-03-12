@@ -74,7 +74,7 @@ class PolyBanking {
    * @return mixed
    */
   private function escape_for_signature($str) {
-    return str_replace(array('=', ';'), array('!!', '??'), $str);
+    return strtr($str, array(';' => '!!', '=' => '??'));
   }
 
   /**
