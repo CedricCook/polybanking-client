@@ -55,7 +55,7 @@ class PolyBanking {
    */
   public function compute_sig($secret, $data) {
     $sig = "";
-
+    ksort($data);
     foreach ($data as $key => $value) {
       $sig .= $this->escape_for_signature($key);
       $sig .= '=';
@@ -64,7 +64,6 @@ class PolyBanking {
       $sig .= $secret;
       $sig .= ';';
     }
-
     return openssl_digest($sig, 'sha512');
   }
 
