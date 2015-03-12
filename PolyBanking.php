@@ -188,7 +188,7 @@ class PolyBanking {
       $response['message'] = 'SIGN';
       return $response;
     }
-    if ($data['config_id'] != $this->configID) {
+    if ($data['config'] != $this->configID) {
       $response['is_ok'] = FALSE;
       $response['message'] = 'CONFIG';
       return $response;
