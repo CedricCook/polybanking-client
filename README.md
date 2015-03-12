@@ -15,6 +15,6 @@ PolyBanking is distributed with the [BSD](http://opensource.org/licenses/BSD-2-C
 
 ## Authors
 
-This client was made by [Cedric Cook](https://github.com/CedricCook)
+This client was made by [Cedric Cook](https://github.com/CedricCook) and reviewed by [Fabian Bircher](https://github.com/bircher).
 
 PolyBanking has been developed by [Maximilien Cuony](https://github.com/the-glu) and reviewed by [Malik Bougacha](https://github.com/gcmalloc) for the [AGEPoly](http://agepoly.ch) and [PolyLAN](https://polylan.ch).
